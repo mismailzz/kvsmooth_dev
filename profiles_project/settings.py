@@ -16,6 +16,13 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+#----------------------------Adding Templates and Static files by Ismail
+#BASE_DIR = Path(__file__).resolve().parent.parent
+TEMPLATES_DIR = str(os.path.join(BASE_DIR, 'templates'))
+STATIC_DIR = str(os.path.join(BASE_DIR, 'static'))
+#----------------------------
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
@@ -57,7 +64,7 @@ ROOT_URLCONF = 'profiles_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATES_DIR], #added by ismail
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,3 +128,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+#-----------------Added by ismail for static files
+STATICFILES_DIRS = [
+    STATIC_DIR,
+]
+
+PROJECT_DIR = str(os.path.dirname(os.path.abspath(__file__)))
+STATIC_ROOT = str(os.path.join(PROJECT_DIR, 'static'))
+#-----------------
