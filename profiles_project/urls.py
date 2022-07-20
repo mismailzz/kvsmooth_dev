@@ -19,4 +19,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('getInfo/', include('profiles_api.urls')),
+    path('celery-progress/', include('celery_progress.urls')),
 ]

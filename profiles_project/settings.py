@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'profiles_api',
+    'celery',
+    'django_celery_results',
+    'celery_progress',
 ]
 
 MIDDLEWARE = [
@@ -137,3 +140,12 @@ STATICFILES_DIRS = [
 PROJECT_DIR = str(os.path.dirname(os.path.abspath(__file__)))
 STATIC_ROOT = str(os.path.join(PROJECT_DIR, 'static'))
 #-----------------
+
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Karachi'
+
+CELERY_RESULT_BACKEND = 'django-db'

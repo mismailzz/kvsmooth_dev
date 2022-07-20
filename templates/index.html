@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,6 +13,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
+
+<div class='progress-wrapper'>
+  <div id='progress-bar' class='progress-bar' style="background-color: #68a9ef; width: 0%;">&nbsp;</div>
+</div>
+<div id="progress-bar-message">Waiting for progress to start...</div>
+<script src="{% static 'celery_progress/celery_progress.js' %}"></script>
     
     Hello World
     {% csrf_token %}
@@ -31,6 +38,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <!--end select2-->
+
+
+
 
     <script>
         $(document).ready(function () {
@@ -75,7 +85,7 @@
             $.ajax({
                 type: 'GET',
                 dataType: 'json',
-                url: "http://127.0.0.1:8000/getInfo/HypervisorConnect/", success: function (result) {
+                url: "http://10.11.17.200:8000/getInfo/HypervisorConnect", success: function (result) {
                    
                     var totalCount = Object.keys(result).length;
     
@@ -92,7 +102,14 @@
             });
 
         }
+
+// vanilla JS version
+document.addEventListener("DOMContentLoaded", function () {
+  var progressUrl = "{% url 'celery_progress:task_status' task_id %}";
+  CeleryProgressBar.initProgressBar(progressUrl);
+});
     </script>
+
 
 </body>
 </html>
