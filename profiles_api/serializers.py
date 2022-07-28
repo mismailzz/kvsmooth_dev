@@ -16,4 +16,5 @@ class HypervisortabledbSerializer(serializers.ModelSerializer):
     '''
     class Meta:
         model = Hypervisortabledb
-        fields = ["hypervisorIP", "name", "operatingSystem", "ipAddress", "state"]
+        fields = ["hypervisorIP", "name", "operatingSystem", "ipAddress", "state"] 
+        
