@@ -10,6 +10,7 @@ from .models import Hypervisortabledb
 from .serializers import HypervisortabledbSerializer
 
 from .tasks import *
+from rest_framework.permissions import AllowAny
 
 
 
@@ -34,7 +35,9 @@ class HypervisorConnect(APIView):
         }
         return Response(hypervisor_info)
     '''    
-    
+    #ALLOWING ACCESS TO ALL TO DELETE THE RECORDS FROM DB
+    permission_classes = (AllowAny,)
+
     def get(self, request):
         hypervisorInfo = Hypervisortabledb.objects.filter(hypervisorIP = "192.168.150.17")
         serializer = HypervisortabledbSerializer(hypervisorInfo, many=True)
@@ -52,9 +55,27 @@ class HypervisorConnect(APIView):
             
         
         return render(request, 'index.html')
-    
 
-       
+    '''
+    def delete(self, request):
+        print(request)
+        if request.method == 'DELETE':
+            Hypervisortabledb.objects.all().delete()
+        return render(request, 'index.html')
+    '''
+
+class DeleteHypervisorInfo(APIView):
+    def post(self, request):
+        if request.method == 'POST':
+            
+            tempIP = request.POST["clearIP"]
+            if tempIP == "":
+                Hypervisortabledb.objects.all().delete()
+            else:
+                Hypervisortabledb.objects.filter(hypervisorIP = tempIP).delete()
+
+        return render(request, 'index.html')   
+
 
 def dashboard(request):
     #result = myceleryfunction.delay()

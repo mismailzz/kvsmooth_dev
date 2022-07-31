@@ -6,5 +6,5 @@ urlpatterns = [
     path('HypervisorConnect/', views.HypervisorConnect.as_view()),
     path('dashboard/', views.dashboard),
     path('dashboard/validate', views.HypervisorConnect.as_view()),
-   
+    path('dashboard/delete', views.DeleteHypervisorInfo.as_view()),
 ]
