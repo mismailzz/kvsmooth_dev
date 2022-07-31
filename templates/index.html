@@ -114,31 +114,12 @@
     </div>
 
     <div class="form-group col-md-1" id="refresh">
-        <button class="btn btn-primary" id="mybutton">Refresh</button>
+        <button class="mybutton btn btn-primary" id="mybutton">Refresh</button>
     </div> 
      
-    <div class="form-row col-md-12" style="width: 100%;">
+        <div class="form-row col-md-12" style="width: 100%;" id="mynewtable">
         <!--Table start-->
-        <table id="example" class="display nowrap" style="width:100%">
-            <thead>
-                <tr>
-                    <th>Hypervisor IP Address</th>
-                    <th>VM Name</th>
-                    <th>Operating System</th>
-                    <th>VM IP Address</th>
-                    <th>State</th>
-                </tr>
-            </thead>
-            <tbody id="mytable">
-                <tr>
-                    <td>fi</td>
-                    <td>fi</td>
-                    <td>fi</td>
-                    <td>fi</td>
-                    <td>fi</td>
-                </tr>
-            </tbody>
-        </table>
+        
         <!--Table ends-->
         </div>
 
@@ -156,54 +137,55 @@
             <!-- Footer -->
         </div>
 
-            <p>Username is :{{username}}</p>
-            <p>Password is: {{password}}</p>
-            <p>IP Address is: {{ipaddress}}</p>
-          
-
+            
         <script>
-            $(document).ready(function () {
-                $('#example').DataTable({
-                    scrollX: true,
-                });
-            });
-        </script>
-
-        <script>
-            $(document).ready(function () {
+            $(document).ready(function() {
                 
-                //button start
-                $("#mybutton").click(function(){
-                  //BindStudents();  
-                   MyFunction();
-                });
-                //button end
-    
+                structureDiv = '<table id="example" class="display nowrap" style="width:100%">';
+                structureDiv += "<tbody>";
+                structureDiv += "</tbody>";
+                structureDiv += "</table>";
+                
+                var dataSet = [
+                ['-','-','-','-','-'],
+                ];
+
+                $('#mynewtable').html( structureDiv );
+                dt = $('#example').DataTable( {
+                   "data": dataSet,
+                   "columns": [
+                       { "title": "Host" },
+                       { "title": "Guest Name" },
+                       { "title": "Guest OS" },
+                       { "title": "Guest IP", "class": "center" },
+                       { "title": "Guest State", "class": "center" }
+                   ]
+               }); 
+               
+               
+           });
+
+            $("#mybutton").click(function(){
+               MyFunction();
             });
-    
+               
             function MyFunction() {
                 $.ajax({
                     type: 'GET',
                     dataType: 'json',
-                    url: "http://10.11.17.200:8000/getInfo/HypervisorConnect/", success: function (result) {
+                    url: "http://127.0.0.1:8000/getInfo/HypervisorConnect/", success: function (result) {
                        
-                        var totalCount = Object.keys(result).length;
-        
+                        var totalCount = Object.keys(result).length;    
                         var structureDiv = "";
-                        //structureDiv += "<p>" + result[0].hostname + "</p>";
-    
+
                         for (var i = 0; i < totalCount; i++){
-                            structureDiv +=  "<tr><td>"+result[i].hypervisorIP + "</td><td>" +  result[i].name +"</td><td>" +  result[i].operatingSystem + "</td><td>" +  result[i].ipAddress + "</td><td>" +  result[i].state + "</td></tr>";
+                            dt.row.add([result[i].hypervisorIP,result[i].name,result[i].operatingSystem,result[i].ipAddress,result[i].state]).draw();
                         }
-    
-                        $("#mytable").html(structureDiv);
-                  
-                    }
+           
+                }
                 });
     
-            }
-        </script>
-    
-
+        }
+    </script>
 </body>
 </html>
