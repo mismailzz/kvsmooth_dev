@@ -9,7 +9,7 @@ from django.shortcuts import render
 from .models import Hypervisortabledb
 from .serializers import HypervisortabledbSerializer
 
-from .tasks import *
+#from .tasks import *
 from rest_framework.permissions import AllowAny
 
 
@@ -51,7 +51,7 @@ class HypervisorConnect(APIView):
             password = request.POST["pass"]
             ipaddress = request.POST["ipaddr"]
  
-            myceleryfunction.delay(ipaddress, password, username, 443, None, True)
+            #myceleryfunction.delay(ipaddress, password, username, 443, None, True)
             
         
         return render(request, 'index.html')

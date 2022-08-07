@@ -22,6 +22,10 @@ TEMPLATES_DIR = str(os.path.join(BASE_DIR, 'templates'))
 STATIC_DIR = str(os.path.join(BASE_DIR, 'static'))
 #----------------------------
 
+#-----------------Added by ismail for media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+#-----------------
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -50,13 +54,14 @@ INSTALLED_APPS = [
     'celery',
     'django_celery_results',
     'celery_progress',
+    'patchpanel',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware', #disable security
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -75,6 +80,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -148,6 +154,9 @@ STATICFILES_DIRS = [
 PROJECT_DIR = str(os.path.dirname(os.path.abspath(__file__)))
 STATIC_ROOT = str(os.path.join(PROJECT_DIR, 'static'))
 #-----------------
+
+
+
 
 CELERY_BROKER_URL = 'redis://localhost:6379'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'

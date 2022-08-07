@@ -11,7 +11,7 @@ sys.path.insert(1, '/root/async_project/pyvmomi-community-samples/samples/')
 
 import re
 from pyVmomi import vmodl, vim
-from tools import cli, service_instance
+#from tools import cli, service_instance
 from argparse import Namespace
 #----------------------------VMtasks import end
 
