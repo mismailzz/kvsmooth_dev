@@ -1,8 +1,3 @@
-# Celery
-from celery import shared_task
-import time
-
-#------------------------------
 import sys
 sys.path.insert(1, '/root/async_project/pyvmomi-community-samples/samples/')
 from argparse import Namespace
@@ -11,29 +6,9 @@ import time
 import re
 from tools import cli, service_instance, pchelper
 from pyVmomi import vim, vmodl
-#------------------------------
-import os
 
 
-
-# Celery Task
-@shared_task(bind=True)
-def mytestceleryfunction(self):
-        print('Task started')
-        # Create the progress recorder instance
-        # which we'll use to update the web page
-
-        print('Start')
-        time.sleep(5)
-        print("Mid")
-        time.sleep(5)
-        print('End')
-
-        return 'Task Complete'
-
-# Celery Task
-@shared_task(bind=True)
-def myceleryfunctionRunScript(self, host_ip, host_user, host_pass, host_port, disablessl, vmguestname, vmguestuser, vmguestpass, scriptPath):
+def myceleryfunctionRunScript(host_ip, host_user, host_pass, host_port, disablessl, vmguestname, vmguestuser, vmguestpass, scriptPath):
     """
     Simple command-line program for executing a process in the VM without the
     network requirement to actually access it.
@@ -66,11 +41,7 @@ def myceleryfunctionRunScript(self, host_ip, host_user, host_pass, host_port, di
             username=args.vm_user, password=args.vm_password
         )
 
-        directory = os.getcwd()
-        scriptorunpath = directory + scriptPath
-
-        #print(directory)
-        with open(scriptorunpath) as f: #my script path
+        with open(scriptPath) as f: #my script path
             lines_cmds = f.readlines()
             for line in lines_cmds:
                 temp_cmds = line.strip()
@@ -122,3 +93,8 @@ def myceleryfunctionRunScript(self, host_ip, host_user, host_pass, host_port, di
         return -1
 
     return 0
+
+
+# Start program
+if __name__ == "__main__":
+    myceleryfunctionRunScript("192.168.150.17", "root", "Gr@v!Tid3@c7ivAt0rs", 443, True, "ismail_DontDeleteWithouPermission", "root", "Temp/123", "/root/async_project/kvsmooth_dev/media/documents/temp.sh")

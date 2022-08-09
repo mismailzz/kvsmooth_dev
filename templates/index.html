@@ -85,9 +85,9 @@
 
     <!--FORM TO CONNECT THE HYPERVISOR TO DUMP THE INFORMATION IN DB-->
     <div class="credContainer">
+        
         <form action="validate" method="post">  
-            
-            {% csrf_token %}   
+            {% csrf_token %}
             <div class="form-row">
      
                 <div class="form-group col-md-2">
@@ -188,7 +188,10 @@
                 $.ajax({
                     type: 'GET',
                     dataType: 'json',
-                    url: "http://127.0.0.1:8000/getInfo/HypervisorConnect/", success: function (result) {
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+                    },
+                    url: "http://10.11.17.200:8000/getInfo/HypervisorConnect/", success: function (result) {
                        
                         var totalCount = Object.keys(result).length;    
                         var structureDiv = "";
@@ -223,7 +226,7 @@
                     beforeSend: function (xhr) {
                         xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
                     },
-                    url: "http://127.0.0.1:8000/getInfo/HypervisorConnect/", success: function (result) {
+                    url: "http://10.11.17.200:8000/getInfo/HypervisorConnect/", success: function (result) {
                        
                         //DELETE Request
            

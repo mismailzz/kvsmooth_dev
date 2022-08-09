@@ -67,22 +67,16 @@
           <ul>
             <li><h5>Select nodes to run patch</h5></li>
             <li style="float:right">
-              
-              <!--
-              <form action="">
-                <div class="form-row align-items-center">
-                -->  
-                  <div class="col-auto">
-                    <input type="text" class="form-control mb-2" placeholder="192.168.xxx.xxx">
-                  </div>
-                  <div class="col-auto">
-                    <button type="submit" class="btn btn-primary mb-2" id="getvminfobtn">Connect</button>
-                  </div>
-
-             <!--   </div>
-              </form>-->
-              
+              <div class="col-auto">
+                <button type="submit" class="btn btn-primary mb-2" id="getvminfobtn">Connect</button>
+              </div>
             </li>
+            <li style="float:right">        
+              <div class="col-auto">
+                <input type="text" class="form-control mb-2" placeholder="192.168.xxx.xxx" id="iptogetinfo">
+                </div>      
+            </li>
+            
           </ul>
         </div>
 
@@ -119,24 +113,39 @@
             <div class="col-auto">
               <button type="submit" class="btn btn-primary mb-2" id="myrefresh">Refresh</button>
             </div>
-          </li>
-
-          <li>
-  
-              <div class="col-auto">
-                <button type="submit" class="btn btn-primary mb-2" onclick="getOption()">Execute</button>
-              </div>
-
-          </li>
+          </li>        
         </ul>
          
+
+        <div>
+          <ul>
+           <li style="margin-right: 1rem;">
+            <input type="text" class="form-control mb-2" id="hostuser" placeholder="Host User" name="hostuser">
+           </li> 
+           <li style="margin-right: 1rem;">
+            <input type="password" class="form-control mb-2" id="hostpass" placeholder="Password" name="hostpass">
+           </li>
+           <li style="margin-right: 1rem;">
+            <input type="text" class="form-control mb-2" id="guestuser" placeholder="Guest User" name="guestuser">
+           </li>
+           <li style="margin-right: 1rem;">
+            <input type="password" class="form-control mb-2" id="guestpass" placeholder="Guest Password" name="guestpass">
+           </li>
+           <li style="margin-right: 1rem;">
+            <button type="submit" class="btn btn-primary mb-2" onclick="getOption()">Execute</button>
+           </li>
+          </ul>    
+        </div>
+
+
       </div>
-        
+
       <!--container end-->
+      
+
     </div>
 
-    {{ mylist }}
-    {{ mylist2 }}
+
 
     <!--MULTI SELECT TABLE SCRIPTS-->
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -200,28 +209,70 @@
       $.ajax({
         type: 'GET',
         dataType: 'json',
-        url: "http://127.0.0.1:8000/getInfo/HypervisorConnect/", success: function (result) {
+        url: "http://10.11.17.200:8000/getInfo/HypervisorConnect/", success: function (result) {
           
             var totalCount = Object.keys(result).length;    
             var structureDiv = "";
 
+            //AS ALL DATA WOULD BE FETCHED FROM THE DB BUT TO APPLY FILTER ON SELECTED HOST
+            //I'M DEFINING IN THE JS TO HANDLE IT FIRST I RUN THE LOOP AND IF FOUND THE RESULTS THEN
+            //SHOW THE REQUIRED RESULTS 
+            //WITOUT THE FILTER CODE, I'M COMMENTING THE CODE IN CASE TO REVERT IT 
+
+            //PATCH TO HANDLE THE FILTER - START
+            var iptogetinfo = document.getElementById("iptogetinfo").value;
+            let found = false;
+            
+            for (var i = 0; i < totalCount; i++){
+              if(result[i].hypervisorIP == iptogetinfo){
+                found = true; //check if the required ip address found in the db result
+              }
+            }
+
             var table = $('#table').bootstrapTable();
             table.bootstrapTable('removeAll');
-             
-            for (var i = 0; i < totalCount; i++){
-              table.bootstrapTable('insertRow', {
+            
+            if (found == true){
+              for (var i = 0; i < totalCount; i++){
+                
+                table.bootstrapTable('insertRow', {
                 index: 1,
                 row: {
                   "host": result[i].hypervisorIP,
                   "guestname": result[i].name,
-                  "guestIP": result[i].operatingSystem,
-                  "guestos": result[i].ipAddress,
+                  "guestIP": result[i].ipAddress,
+                  "guestos": result[i].operatingSystem,
+                  "guestate": result[i].state
+                  }
+                })
+              }
+
+              found = false; //done with work so set the flag to false
+            }
+            
+            // PATCH TO HANDLE THE FILTER - END
+
+
+            /*
+            var table = $('#table').bootstrapTable();
+            table.bootstrapTable('removeAll');
+        
+            
+            for (var i = 0; i < totalCount; i++){
+              
+                table.bootstrapTable('insertRow', {
+                index: 1,
+                row: {
+                  "host": result[i].hypervisorIP,
+                  "guestname": result[i].name,
+                  "guestIP": result[i].ipAddress,
+                  "guestos": result[i].operatingSystem,
                   "guestate": result[i].state
                 }
               })
             }
             //DOCUMENTATION: https://examples.bootstrap-table.com/index.html#methods/remove-all.html#view-source
-
+            */
 
         }
     
@@ -236,7 +287,7 @@
     $.ajax({
       type: 'GET',
       dataType: 'json',
-      url: "http://127.0.0.1:8000/patchpanel/getpatchInfo/", success: function (result) {
+      url: "http://10.11.17.200:8000/patchpanel/getpatchInfo/", success: function (result) {
         
           var totalCount = Object.keys(result).length;    
           var structureDiv2 = '<option selected></option>';
@@ -266,12 +317,22 @@
     console.log(output)
     console.log('getSelections: ' + JSON.stringify($table.bootstrapTable('getSelections')));
     
+    var hostuser = document.getElementById("hostuser").value;
+    var hostpass = document.getElementById("hostpass").value;
+    var guestuser = document.getElementById("guestuser").value;
+    var guestpass = document.getElementById("guestpass").value;
+
+
     $.ajax({
       type: "GET",
       url: 'sendpatchinfo',
       data: {
-          "selectedscript": selectElement,
+          "selectedscript": output,
           "selectedguestvms": JSON.stringify($table.bootstrapTable('getSelections')),
+          "hostuser" : hostuser,
+          "hostpass": hostpass,
+          "guestuser": guestuser,
+          "guestpass": guestpass,
       },
       dataType: "json",
       success: function (data) {
