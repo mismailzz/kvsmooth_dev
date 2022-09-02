@@ -6,3 +6,4 @@ django_celery_results
 celery-progress
 pyVmomi
 celery[redis]
+python-decouple==3.6
