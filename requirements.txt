@@ -6,4 +6,4 @@ django_celery_results
 celery-progress
 pyVmomi
 Pillow
-"celery[redis]"
+celery[redis]
